@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[AccountTransaction]
 (
-	[id] INT NOT NULL, 
+	[id] INT NOT NULL IDENTITY(1,1), 
     [amount] DECIMAL NOT NULL, 
     [entry_date] DATETIME NOT NULL DEFAULT GetDate(), 
     [account_id] INT NOT NULL, 

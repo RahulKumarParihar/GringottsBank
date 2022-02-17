@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Account]
 (
-	[id] INT NOT NULL, 
+	[id] INT NOT NULL IDENTITY(1000,1), 
     [branch_id] INT NOT NULL, 
     [balance] DECIMAL NOT NULL, 
     [create_date] DATETIME NOT NULL DEFAULT GetDate(), 
