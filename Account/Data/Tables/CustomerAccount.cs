@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankLibrary.Data.Tables
 {
+    [Table("CustomerAccount")]
     public class CustomerAccount
     {
         [Required, Column("customer_id")]

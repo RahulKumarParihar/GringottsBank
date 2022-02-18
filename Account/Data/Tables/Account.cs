@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankLibrary.Data.Tables
 {
+    [Table("Account")]
     public class Account
     {
         public Account()

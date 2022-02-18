@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankLibrary.Data.Tables
 {
+    [Table("AccountTransaction")]
     public class Transaction
     {
         [Key]
