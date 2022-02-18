@@ -15,8 +15,8 @@ namespace BankLibrary.Data.Tables
 
         [Key]
         public int Id { get; set; }
-        [Required, Column("branch_id")]
-        public int BranchId { get; set; }
+        [Column("branch_id")]
+        public int? BranchId { get; set; }
         [Required]
         public decimal Balance { get; set; }
         [Required, Column("create_date")]

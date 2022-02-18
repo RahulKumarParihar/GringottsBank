@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Account]
 (
 	[id] INT NOT NULL IDENTITY(1000,1), 
-    [branch_id] INT NOT NULL, 
+    [branch_id] INT NULL, 
     [balance] DECIMAL NOT NULL, 
     [create_date] DATETIME NOT NULL DEFAULT GetDate(), 
     [close_date] DATETIME NULL,
