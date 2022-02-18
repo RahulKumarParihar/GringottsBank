@@ -36,19 +36,19 @@ namespace GringottsBank.Managers
             return response;
         }
 
-        public async Task<ResponseModel<PagedResponse<CustomerDto>>> GetCustomer(int id)
+        public async Task<ResponseModel<CustomerDto>> GetCustomer(int id)
         {
             var parameterValidation = new IdentityValidator(id);
             var validationResult = await parameterValidation.ValidateAsync();
 
             if (!validationResult.ValidationStatus)
             {
-                return ResponseHelper.AddValidationErrorToErrorResponse<PagedResponse<CustomerDto>>(validationResult);
+                return ResponseHelper.AddValidationErrorToErrorResponse<CustomerDto>(validationResult);
             }
 
-            var result = new Success<PagedResponse<CustomerDto>>
+            var result = new Success<CustomerDto>
             {
-                Data = _customerService.GetCustomer(id)
+                Data = await _customerService.GetCustomer(id)
             };
 
             return result;

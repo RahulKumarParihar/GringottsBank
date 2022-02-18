@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GringottsBank.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/customers")]
     [ApiController]
     public class CustomerController : BaseController
     {
@@ -16,7 +16,6 @@ namespace GringottsBank.Controllers
             this.customerManager = customerManager;
         }
         [HttpGet]
-        [Route("Get")]
         public async Task<IActionResult> GetCustomers([FromQuery] Parameters parameters)
         {
             var respone = await customerManager.GetCustomers(parameters);
@@ -24,8 +23,7 @@ namespace GringottsBank.Controllers
             return EndpointResponse(respone);
         }
 
-        [HttpGet]
-        [Route("Get/{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCustomer(int id)
         {
             var respone = await customerManager.GetCustomer(id);

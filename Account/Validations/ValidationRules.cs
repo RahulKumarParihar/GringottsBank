@@ -231,6 +231,15 @@ namespace BankLibrary.Validations
             return true;
         }
 
+        protected bool ValidateNotNullObject(object value, string objectName)
+        {
+            if (value != null)
+            {
+                AddValidationError(objectName, "Must be null");
+            }
+            return true;
+        }
+
         protected bool ValidateIdentityGreaterThanZero()
         {
             if (Validation.ValidateGreaterThanZero(businessObject) == false)

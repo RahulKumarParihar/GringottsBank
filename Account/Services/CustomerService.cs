@@ -7,6 +7,7 @@ using BankLibrary.Models;
 using BankLibrary.RequestParameters;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BankLibrary.Services
 {
@@ -30,13 +31,13 @@ namespace BankLibrary.Services
             return _mapper.Map<PagedResponse<CustomerDto>>(result);
         }
 
-        public PagedResponse<CustomerDto> GetCustomer(int id)
+        public async Task<CustomerDto> GetCustomer(int id)
         {
             var query = _bankDbContext.Customers.AsNoTracking().Where(cust => cust.Id == id);
 
-            var result = PagedResponse<Customer>.ToPagedList(query, 1, 1);
+            var result = await query.SingleOrDefaultAsync();
 
-            return _mapper.Map<PagedResponse<CustomerDto>>(result);
+            return _mapper.Map<CustomerDto>(result);
         }
     }
 }
