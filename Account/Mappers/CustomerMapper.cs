@@ -12,6 +12,8 @@ namespace BankLibrary.Mappers
                     .ForMember(dest => dest.DisplayName, opts => opts.Ignore());
 
             CreateMap<CustomerDto, Customer>();
+
+            CreateMap<CreateCustomerDto, Customer>();
         }
 
     }

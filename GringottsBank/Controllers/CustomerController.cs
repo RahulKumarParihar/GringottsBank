@@ -1,4 +1,5 @@
-﻿using BankLibrary.RequestParameters;
+﻿using BankLibrary.DTOs;
+using BankLibrary.RequestParameters;
 using GringottsBank.Managers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -31,6 +32,13 @@ namespace GringottsBank.Controllers
             return EndpointResponse(respone);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddCustomer(CreateCustomerDto dto)
+        {
+            var respone = await customerManager.AddCustomer(dto);
+
+            return EndpointResponse(respone);
+        }
 
     }
 }

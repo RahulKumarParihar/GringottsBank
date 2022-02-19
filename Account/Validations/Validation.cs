@@ -116,14 +116,25 @@ namespace BankLibrary.Validations
         public static bool IsEndDateBeforeStartDate(object startEntity, object endEntity)
         {
             if (startEntity == null) return false;
-            if (endEntity == null) return true;
             if (IsDate(startEntity.ToString()) == false) return false;
-            if (IsDate(endEntity.ToString()) == false) return false;
+            if (endEntity != null && IsDate(endEntity.ToString()) == false) return false;
 
             DateTime startDate = Convert.ToDateTime(startEntity.ToString());
+
+            if (endEntity is null) return true;
             DateTime endDate = Convert.ToDateTime(endEntity.ToString());
 
             return DateTime.Compare(startDate, endDate) <= 0;
+        }
+
+        public static bool IsDateLessThanToday(object entity)
+        {
+            if (entity == null) return false;
+            if (IsDate(entity.ToString()) == false) return false;
+
+            DateTime dateTime = Convert.ToDateTime(entity.ToString());
+
+            return DateTime.Compare(dateTime, DateTime.Now) <= 0;
         }
 
         private static bool IsDate(string date)

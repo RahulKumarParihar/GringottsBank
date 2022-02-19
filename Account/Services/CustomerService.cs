@@ -39,5 +39,15 @@ namespace BankLibrary.Services
 
             return _mapper.Map<CustomerDto>(result);
         }
+
+        public async Task<CustomerDto> AddCustomer(CreateCustomerDto customerDto)
+        {
+            var newCustomer = _mapper.Map<Customer>(customerDto);
+            _bankDbContext.Customers.Add(newCustomer);
+
+            await _bankDbContext.SaveChangesAsync();
+
+            return await GetCustomer(newCustomer.Id);
+        }
     }
 }

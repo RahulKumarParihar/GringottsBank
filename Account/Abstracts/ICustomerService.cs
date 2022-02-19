@@ -7,6 +7,7 @@ namespace BankLibrary.Abstracts
 {
     public interface ICustomerService
     {
+        Task<CustomerDto> AddCustomer(CreateCustomerDto customerDto);
         Task<CustomerDto> GetCustomer(int id);
         PagedResponse<CustomerDto> GetCustomers(Parameters customerParameters);
     }

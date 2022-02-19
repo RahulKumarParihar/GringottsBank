@@ -53,5 +53,23 @@ namespace GringottsBank.Managers
 
             return result;
         }
+
+        public async Task<ResponseModel<CustomerDto>> AddCustomer(CreateCustomerDto customerDto)
+        {
+            var parameterValidation = new CreateCustomerValidator(customerDto);
+            var validationResult = await parameterValidation.ValidateAsync();
+
+            if (!validationResult.ValidationStatus)
+            {
+                return ResponseHelper.AddValidationErrorToErrorResponse<CustomerDto>(validationResult);
+            }
+
+            var response = new Success<CustomerDto>
+            {
+                Data = await _customerService.AddCustomer(customerDto)
+            };
+
+            return response;
+        }
     }
 }

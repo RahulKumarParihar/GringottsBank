@@ -236,6 +236,18 @@ namespace BankLibrary.Validations
             return true;
         }
 
+        protected bool ValidateDateLessThanToday(string propertyName)
+        {
+            object valueOf = GetPropertyValue(propertyName);
+            if (Validation.IsDateLessThanToday(valueOf) == false)
+            {
+                AddValidationError(propertyName, $"Must be greater than Today");
+                return false;
+            }
+
+            return true;
+        }
+
         protected bool ValidateNullObject(object value, string objectName)
         {
             if (value == null)
