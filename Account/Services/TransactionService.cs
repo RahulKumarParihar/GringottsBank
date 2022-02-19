@@ -28,7 +28,8 @@ namespace BankLibrary.Services
         public PagedResponse<TransactionDto> GetTransactions(TransactionParameter parameters)
         {
             var query = GetTransactionQuery()
-                .Where(acc => acc.AccountId == parameters.AccountId);
+                .Where(acc => acc.AccountId == parameters.AccountId)
+                .OrderByDescending(t => t.EntryDate);
 
             var result = PagedResponse<Transaction>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
 
@@ -51,7 +52,7 @@ namespace BankLibrary.Services
                 query = query.Where(tc => tc.t.EntryDate <= parameters.EndDate);
             }
 
-            var result = PagedResponse<Transaction>.ToPagedList(query.Select(tc => tc.t), parameters.PageNumber, parameters.PageSize);
+            var result = PagedResponse<Transaction>.ToPagedList(query.Select(tc => tc.t).OrderByDescending(t => t.EntryDate), parameters.PageNumber, parameters.PageSize);
 
             return mapper.Map<PagedResponse<TransactionDto>>(result);
         }
