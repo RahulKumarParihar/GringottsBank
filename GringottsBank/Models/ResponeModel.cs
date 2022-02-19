@@ -10,7 +10,6 @@ namespace GringottsBank.Models
 
     public class Error<T> : ResponseModel<T>
     {
-
         public string ErrorMessage { get { return HasError ? string.Join(",", ErrorMessages) : ""; } }
     }
     public class ResponseModel<T>

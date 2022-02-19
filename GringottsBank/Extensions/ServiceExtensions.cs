@@ -19,6 +19,9 @@ namespace GringottsBank.Extensions
             // account
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<AccountManager>();
+            // transaction
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<TransactionManager>();
         }
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -31,8 +34,10 @@ namespace GringottsBank.Extensions
 
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(CustomerMapper), 
-                typeof(AccountMapper));
+            services.AddAutoMapper(
+                typeof(CustomerMapper), 
+                typeof(AccountMapper),
+                typeof(TransactionMapper));
         }
     }
 }

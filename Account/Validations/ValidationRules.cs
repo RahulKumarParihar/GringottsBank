@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -216,6 +217,19 @@ namespace BankLibrary.Validations
             if (Validation.IsDateGreaterThanDefaultDate(valueOf) == false)
             {
                 AddValidationError(propertyName, "Required");
+                return false;
+            }
+
+            return true;
+        }
+
+        protected bool ValidateEndDateBeforeStartDate(string startPropertyName, string endPropertyName)
+        {
+            object startValueOf = GetPropertyValue(startPropertyName);
+            object endValueOf = GetPropertyValue(endPropertyName);
+            if (Validation.IsEndDateBeforeStartDate(startValueOf, endValueOf) == false)
+            {
+                AddValidationError(endPropertyName, $"Must be greater than {startPropertyName}");
                 return false;
             }
 
