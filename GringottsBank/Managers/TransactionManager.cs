@@ -3,6 +3,7 @@ using BankLibrary.Abstracts;
 using BankLibrary.DTOs;
 using BankLibrary.Models;
 using BankLibrary.RequestParameters;
+using BankLibrary.Validations;
 using BankLibrary.Validations.Validators;
 using GringottsBank.Helpers;
 using GringottsBank.Models;
@@ -70,8 +71,7 @@ namespace GringottsBank.Managers
 
         public async Task<ResponseModel<TransactionDto>> Credit(AddTransactionDto transactionDto)
         {
-            var parameterValidation = new AddTransactionValidator(transactionDto);
-            var validationResult = await parameterValidation.ValidateAsync();
+            var validationResult = await GetValidationResultForAddTransaction(transactionDto);
 
             if (!validationResult.ValidationStatus)
             {
@@ -81,18 +81,12 @@ namespace GringottsBank.Managers
             var newTransaction = mapper.Map<TransactionDto>(transactionDto);
             newTransaction.Type = "C";
 
-            var result = new Success<TransactionDto>
-            {
-                Data = await transaction.AddTransaction(newTransaction)
-            };
-
-            return result;
+            return await AddTransaction(newTransaction);
         }
 
         public async Task<ResponseModel<TransactionDto>> Debit(AddTransactionDto transactionDto)
         {
-            var parameterValidation = new AddTransactionValidator(transactionDto);
-            var validationResult = await parameterValidation.ValidateAsync();
+            var validationResult = await GetValidationResultForAddTransaction(transactionDto);
 
             if (!validationResult.ValidationStatus)
             {
@@ -102,12 +96,31 @@ namespace GringottsBank.Managers
             var newTransaction = mapper.Map<TransactionDto>(transactionDto);
             newTransaction.Type = "D";
 
-            var result = new Success<TransactionDto>
-            {
-                Data = await transaction.AddTransaction(newTransaction)
-            };
+            return await AddTransaction(newTransaction);
+        }
 
-            return result;
+        private async Task<ResponseModel<TransactionDto>> AddTransaction(TransactionDto transactionDto)
+        {
+            ResponseModel<TransactionDto> response;
+            try
+            {
+                response = new Success<TransactionDto>
+                {
+                    Data = await transaction.AddTransaction(transactionDto)
+                };
+            }
+            catch (System.Exception ex)
+            {
+                response = ResponseHelper.CreateErrorResponseFromException<TransactionDto>(ex);
+            }
+
+            return response;
+        }
+
+        private async Task<ValidationResult> GetValidationResultForAddTransaction(AddTransactionDto transactionDto)
+        {
+            var parameterValidation = new AddTransactionValidator(transactionDto);
+            return await parameterValidation.ValidateAsync();
         }
     }
 }

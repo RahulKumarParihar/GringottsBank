@@ -16,20 +16,19 @@ namespace BankLibrary.Services
         private readonly BankDbContext bankDbContext;
         private readonly IMapper mapper;
         private readonly IAccountService accountService;
-        private readonly ICustomerService customer;
         private static readonly object locker = new object();
 
-        public TransactionService(BankDbContext bankDbContext, IMapper mapper, IAccountService account, ICustomerService customer)
+        public TransactionService(BankDbContext bankDbContext, IMapper mapper, IAccountService account)
         {
             this.bankDbContext = bankDbContext;
             this.mapper = mapper;
             this.accountService = account;
-            this.customer = customer;
         }
 
         public PagedResponse<TransactionDto> GetTransactions(TransactionParameter parameters)
         {
-            var query = bankDbContext.Transactions.AsNoTracking().Where(acc => acc.AccountId == parameters.AccountId);
+            var query = GetTransactionQuery()
+                .Where(acc => acc.AccountId == parameters.AccountId);
 
             var result = PagedResponse<Transaction>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
 
@@ -38,7 +37,8 @@ namespace BankLibrary.Services
 
         public PagedResponse<TransactionDto> GetTransactionsForCustomer(CustomerTransactionParameter parameters)
         {
-            var query = bankDbContext.Transactions.AsNoTracking().Join(bankDbContext.CustomerAccountMappings, t => t.AccountId, c => c.AccountId, (t, c) => new { t, c })
+            var query = GetTransactionQuery()
+                .Join(bankDbContext.CustomerAccountMappings, t => t.AccountId, c => c.AccountId, (t, c) => new { t, c })
                 .Where(tc => tc.c.CustomerId == parameters.CustomerID);
 
             if (parameters.StartDate != null)
@@ -74,12 +74,15 @@ namespace BankLibrary.Services
             {
                 UpdateAccountBalance(addTransaction, account);
 
+                if (account.Balance < 0)
+                    throw new System.Exception("Low Account Balance: Cannot procced with the transaction");
+
                 bankDbContext.Accounts.Update(mapper.Map<Account>(account));
 
                 bankDbContext.SaveChanges();
             }
 
-            var newlyCreatedTransaction = await bankDbContext.Transactions
+            var newlyCreatedTransaction = await GetTransactionQuery()
                 .SingleOrDefaultAsync(acc => acc.Id == newTransaction.Id);
 
             return mapper.Map<TransactionDto>(newlyCreatedTransaction);
@@ -95,6 +98,13 @@ namespace BankLibrary.Services
             {
                 accountDto.Balance += addTransaction.Amount;
             }
+        }
+
+        private IQueryable<Transaction> GetTransactionQuery()
+        {
+            return bankDbContext.Transactions.AsNoTracking()
+                .Include(t => t.Account)
+                .Include(t => t.Account.Customers.Customer);
         }
     }
 }
