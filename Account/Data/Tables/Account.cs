@@ -10,7 +10,6 @@ namespace BankLibrary.Data.Tables
     {
         public Account()
         {
-            Customers = new HashSet<CustomerAccount>();
             Transactions = new HashSet<Transaction>();
         }
 
@@ -25,7 +24,7 @@ namespace BankLibrary.Data.Tables
         [Column("close_date")]
         public DateTime? CloseDate { get; set; }
 
-        public virtual ICollection<CustomerAccount> Customers { get; set; }
+        public virtual CustomerAccount Customers { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
         public virtual Branch Branch { get; set; }
     }

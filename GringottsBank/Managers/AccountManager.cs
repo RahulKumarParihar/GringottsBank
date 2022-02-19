@@ -69,39 +69,53 @@ namespace GringottsBank.Managers
 
             account.CreateDate = System.DateTime.Now;
 
-            var result = new Success<AccountDto>
+            ResponseModel<AccountDto> result;
+            try
             {
-                Data = await accountService.AddAccount(mapper.Map<AccountDto>(account))
-            };
+                result = new Success<AccountDto>
+                {
+                    Data = await accountService.AddAccount(mapper.Map<AccountDto>(account))
+                };
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseHelper.CreateErrorResponseFromException<AccountDto>(ex);
+            }
 
             return result;
         }
 
         public async Task<ResponseModel<AccountDto>> CloseAccount(int id)
         {
-            var parameterValidation = new IdentityValidator(id);
-            var validationResult = await parameterValidation.ValidateAsync();
+            ResponseModel<AccountDto> result;
 
-            if (!validationResult.ValidationStatus)
-            {
-                return ResponseHelper.AddValidationErrorToErrorResponse<AccountDto>(validationResult);
-            }
+            var validationErrorResponse = new Error<AccountDto>();
+            var parameterValidation = new IdentityValidator(id);
+            var existingValidationResult = await parameterValidation.ValidateAsync();
+            ResponseHelper.AppendValidationErrorToErrorResponse(validationErrorResponse, existingValidationResult);
 
             var existingAccount = await accountService.GetAccount(id);
-            
-            var closeAccountValidator = new CloseAccountValidator(existingAccount);
-            validationResult = await closeAccountValidator.ValidateAsync();
 
-            if (!validationResult.ValidationStatus)
-            {
-                return ResponseHelper.AddValidationErrorToErrorResponse<AccountDto>(validationResult);
-            }
+            var closeAccountValidator = new CloseAccountValidator(existingAccount);
+            var validationResult = await closeAccountValidator.ValidateAsync();
+            ResponseHelper.AppendValidationErrorToErrorResponse(validationErrorResponse, validationResult);
+
+            if (!existingValidationResult.ValidationStatus || !validationResult.ValidationStatus)
+                return validationErrorResponse;
+
             existingAccount.CloseDate = System.DateTime.Now;
 
-            var result = new Success<AccountDto>
+            try
             {
-                Data = await accountService.UpdateAccount(existingAccount)
-            };
+                result = new Success<AccountDto>
+                {
+                    Data = await accountService.UpdateAccount(existingAccount)
+                };
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseHelper.CreateErrorResponseFromException<AccountDto>(ex);
+            }
 
             return result;
         }

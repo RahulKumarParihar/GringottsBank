@@ -7,7 +7,7 @@ namespace BankLibrary.Data
     {
         public BankDbContext(DbContextOptions<BankDbContext> contextOptions) : base(contextOptions)
         {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking; 
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -17,7 +17,7 @@ namespace BankLibrary.Data
 
             //// configures one-to-many relationship
             modelBuilder.Entity<Account>()
-                .HasMany(acc => acc.Customers)
+                .HasOne(acc => acc.Customers)
                 .WithOne(cus => cus.Account);
 
             modelBuilder.Entity<Customer>()

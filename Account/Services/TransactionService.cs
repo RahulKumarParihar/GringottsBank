@@ -96,17 +96,5 @@ namespace BankLibrary.Services
                 accountDto.Balance += addTransaction.Amount;
             }
         }
-
-        //public async Task<AccountDto> UpdateAccount(AccountDto accountDto)
-        //{
-        //    var existingAccount = mapper.Map<Account>(accountDto);
-        //    bankDbContext.Accounts.Update(existingAccount);
-
-        //    await bankDbContext.SaveChangesAsync();
-
-        //    var newlyCreatedAccount = await bankDbContext.Accounts.SingleOrDefaultAsync(acc => acc.Id == existingAccount.Id);
-
-        //    return mapper.Map<AccountDto>(newlyCreatedAccount);
-        //}
     }
 }

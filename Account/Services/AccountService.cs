@@ -26,7 +26,7 @@ namespace BankLibrary.Services
 
         public PagedResponse<AccountDto> GetAccounts(Parameters parameters)
         {
-            var query = bankDbContext.Accounts.AsNoTracking();
+            var query = GetAccountQuery();
 
             var result = PagedResponse<Account>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
 
@@ -35,7 +35,9 @@ namespace BankLibrary.Services
 
         public async Task<AccountDto> GetAccount(int id)
         {
-            var query = bankDbContext.Accounts.AsNoTracking().Where(cust => cust.Id == id);
+            var query = GetAccountQuery();
+
+            query = query.Where(cust => cust.Id == id);
 
             var result = await query.SingleOrDefaultAsync();
 
@@ -53,31 +55,27 @@ namespace BankLibrary.Services
 
             var newAccount = mapper.Map<Account>(accountDto);
             bankDbContext.Accounts.Add(newAccount);
-
-            newAccount.Customers.Add(
-                new CustomerAccount
-                {
-                    CustomerId = customer.Id,
-                }
-            );
-
+            newAccount.Customers = new CustomerAccount { CustomerId = customer.Id };
             await bankDbContext.SaveChangesAsync();
 
-            var newlyCreatedAccount = await bankDbContext.Accounts.SingleOrDefaultAsync(acc => acc.Id == newAccount.Id);
-
-            return mapper.Map<AccountDto>(newlyCreatedAccount);
+            return await GetAccount(newAccount.Id);
         }
 
         public async Task<AccountDto> UpdateAccount(AccountDto accountDto)
         {
             var existingAccount = mapper.Map<Account>(accountDto);
+            
             bankDbContext.Accounts.Update(existingAccount);
-
             await bankDbContext.SaveChangesAsync();
 
-            var newlyCreatedAccount = await bankDbContext.Accounts.SingleOrDefaultAsync(acc => acc.Id == existingAccount.Id);
+            return await GetAccount(existingAccount.Id);
+        }
 
-            return mapper.Map<AccountDto>(newlyCreatedAccount);
+        private IQueryable<Account> GetAccountQuery()
+        {
+            return bankDbContext.Accounts.AsNoTracking()
+                .Include(a => a.Customers)
+                .Include(a => a.Customers.Customer);
         }
     }
 }
