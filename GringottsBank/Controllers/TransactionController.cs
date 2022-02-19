@@ -1,6 +1,7 @@
 ﻿using BankLibrary.DTOs;
 using BankLibrary.RequestParameters;
 using GringottsBank.Managers;
+using GringottsBank.Token.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace GringottsBank.Controllers
 {
     [Route("api/transactions")]
     [ApiController]
+    [JWTAuth]
     public class TransactionController : BaseController
     {
         private readonly TransactionManager transaction;
