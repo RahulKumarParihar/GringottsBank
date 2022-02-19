@@ -3,6 +3,7 @@ using BankLibrary.Data;
 using BankLibrary.Mappers;
 using BankLibrary.Services;
 using GringottsBank.Managers;
+using GringottsBank.Token;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,13 +23,15 @@ namespace GringottsBank.Extensions
             // transaction
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<TransactionManager>();
+            // token
+            services.AddScoped<JWTTokenUtil>();
         }
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var bankConnectionString = configuration.GetConnectionString("Bank");
             services.AddDbContext<BankDbContext>(options =>
-                   options.UseSqlServer(bankConnectionString),
+                   options.UseNpgsql(bankConnectionString),
                    ServiceLifetime.Transient);
         }
 

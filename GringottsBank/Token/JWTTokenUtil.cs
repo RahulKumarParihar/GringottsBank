@@ -42,7 +42,7 @@ namespace GringottsBank.Token
 
         public bool ValidateJwtToken(string token)
         {
-            if (token == null)
+            if (string.IsNullOrWhiteSpace(token))
                 return false;
 
             var tokenHandler = new JwtSecurityTokenHandler();
