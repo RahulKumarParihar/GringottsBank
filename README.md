@@ -2,15 +2,14 @@
 
 Basic Bank API consisting of three endpoint Customer, Account, AccountTranscation
 
-## Dependency
-* [NET Core 5.0](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
-* [SQL Server](https://www.microsoft.com/en-in/sql-server/sql-server-downloads)
-
-
 #### Solution contains three projects
 1. Bank *(Database solution)*
 2. BankLibrary *(Library containing the business logic and data access layer)*
 3. GringottsBank *(Enpoints of the project)*
+
+## Dependency
+* [NET Core 5.0](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
+* [SQL Server](https://www.microsoft.com/en-in/sql-server/sql-server-downloads)
 
 ## Database design
 Tables
