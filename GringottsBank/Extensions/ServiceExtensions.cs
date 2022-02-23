@@ -31,7 +31,7 @@ namespace GringottsBank.Extensions
         {
             var bankConnectionString = configuration.GetConnectionString("Bank");
             services.AddDbContext<BankDbContext>(options =>
-                   options.UseNpgsql(bankConnectionString),
+                   options.UseSqlServer(bankConnectionString),
                    ServiceLifetime.Transient);
         }
 

@@ -1,11 +1,13 @@
 ﻿using GringottsBank.Models;
 using GringottsBank.Token;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GringottsBank.Controllers
 {
     [Route("api/token")]
     [ApiController]
+    [Token.Attributes.JWTAuth]
     public class TokenController : BaseController
     {
         private readonly JWTTokenUtil tokenUtil;
@@ -16,6 +18,7 @@ namespace GringottsBank.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult GetToken()
         {
             var respone = new Success<string>
